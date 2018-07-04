@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Popular Movies</string>
+    <string name="error_message">Network Error</string>
+    <string name="highest_rated">Highest rated</string>
+    <string name="most_popular">Most popular</string>
+    <string name="movie_post">Movie Post</string>
+    <string name="mark_as_favorite">Like</string>
+    <string name="movie_trailers">Trailers</string>
+    <string name="vote_score">/10</string>
+</resources>
