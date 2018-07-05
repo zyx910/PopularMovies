@@ -103,12 +103,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
     @Override
     public void MovieOnClick(Movie movieDetail) {
         Intent intent =  new Intent(MainActivity.this,MovieDetail.class);
-        intent.putExtra("Title",movieDetail.getTitle());
-        intent.putExtra("Movie Poster",movieDetail.getMoviePostUrl());
-        intent.putExtra("Release Date",movieDetail.getReleaseDate());
-        intent.putExtra("Overview",movieDetail.getPlotSynopsis());
-        intent.putExtra("id",movieDetail.getId());
-        intent.putExtra("vote average",movieDetail.getVoteAverage());
+        intent.putExtra("Movie",movieDetail);
         startActivity(intent);
     }
 

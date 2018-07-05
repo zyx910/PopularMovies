@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.android.popularmovies.data.Movie;
 import com.squareup.picasso.Picasso;
 
 public class MovieDetail extends AppCompatActivity {
@@ -17,7 +18,6 @@ public class MovieDetail extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        String movieIntentMessage;
         TextView voteAverage;
         TextView movieDetail;
         ImageView moviePosterImage;
@@ -37,23 +37,28 @@ public class MovieDetail extends AppCompatActivity {
         Intent intentThatStartedThisActivity = getIntent();
 
         if (intentThatStartedThisActivity != null) {
-            if (intentThatStartedThisActivity.hasExtra("Title")) {
-                movieIntentMessage = intentThatStartedThisActivity.getStringExtra("Title");
+            if (intentThatStartedThisActivity.hasExtra("Movie")) {
+                Movie movie = getIntent().getParcelableExtra("Movie");
+
+                String movieIntentMessage = movie.getTitle();
                 movieDetail.setText(movieIntentMessage);
 
-                String movieReleaseDate = intentThatStartedThisActivity.getStringExtra("Release Date");
+                String movieReleaseDate = movie.getReleaseDate();
                 movieReleaseTime.setText(movieReleaseDate);
 
-                double voteScore = intentThatStartedThisActivity.getDoubleExtra("vote average",0);
+
+                double voteScore = movie.getVoteAverage();
                 String voteString = voteScore + getString(R.string.vote_score);
                 voteAverage.setText(voteString);
 
 
-                String moviePosterUrl = intentThatStartedThisActivity.getStringExtra("Movie Poster");
+                String moviePosterUrl = movie.getMoviePostUrl();
                 Picasso.get().load(moviePosterUrl).into(moviePosterImage);
 
-                String movieOverviewText = intentThatStartedThisActivity.getStringExtra("Overview");
+
+                String movieOverviewText = movie.getPlotSynopsis();
                 movieOverview.setText(movieOverviewText);
+
                 movieId = intentThatStartedThisActivity.getStringExtra("id");
             }
 
