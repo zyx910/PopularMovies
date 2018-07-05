@@ -1,3 +1,3 @@
 # PopularMovies
 ## API
-You should add a TMDB_API at NetWorkUtils of utilities
+ADD API_KEY at gradle.properties
