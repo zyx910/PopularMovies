@@ -107,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
             if (strings.length==0){
                 return null;
             }
+            mMovie.clear();
             String location = strings[0];
             URL movieRequestUrl = NetWorkUtils.buildUrl(location);
             try{
@@ -158,10 +159,10 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
     public boolean onOptionsItemSelected(MenuItem item) {
         int menuID = item.getItemId();
         if(menuID == R.id.most_popular){
-            mMovieAdapter.setMovieImageUris(null);
+//            mMovieAdapter.setMovieImageUris(null);
             new FetchMovieTask().execute(MOST_POPULAR_MOVIE_URL);
         }else if(menuID == R.id.highest_rated){
-            mMovieAdapter.setMovieImageUris(null);
+//            mMovieAdapter.setMovieImageUris(null);
             new FetchMovieTask().execute(HIGHEST_RATED_MOVIE_URL);
         }
         return super.onOptionsItemSelected(item);
