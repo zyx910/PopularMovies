@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -18,17 +17,12 @@ import android.widget.TextView;
 
 import com.example.android.popularmovies.MovieAdapter.MovieAdapterOnClickHandler;
 import com.example.android.popularmovies.data.Movie;
-import com.example.android.popularmovies.utilities.GetAttributesFromJSONObject;
-import com.example.android.popularmovies.utilities.MovieJSONObject;
-import com.example.android.popularmovies.utilities.NetWorkUtils;
+import com.example.android.popularmovies.utilities.FetchMovieAsyncTask;
 
-import org.json.JSONObject;
-
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements MovieAdapterOnClickHandler {
+public class MainActivity extends AppCompatActivity implements MovieAdapterOnClickHandler, FetchMovieAsyncTask.OnTaskCompleted {
     private MovieAdapter mMovieAdapter;
     private RecyclerView mRecyclerView;
 
@@ -68,6 +62,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
         mRecyclerView.setAdapter(mMovieAdapter);
         loadMovieData();
 
+
+
     }
 
     private void loadMovieData(){
@@ -75,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
             showMovieDataView();
-            new FetchMovieTask().execute(MOST_POPULAR_MOVIE_URL);
+            fetchMovieData(MOST_POPULAR_MOVIE_URL);
         }else {
             showErrorMessage();
         }
@@ -103,47 +99,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
     }
 
 
-    private   class  FetchMovieTask extends AsyncTask<String,Void,List<Movie>>{
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mLoadingIndicator.setVisibility(View.VISIBLE);
-
-        }
-
-        @Override
-        protected List<Movie> doInBackground(String... strings) {
-            if (strings.length==0){
-                return null;
-            }
-            mMovie.clear();
-            String location = strings[0];
-            URL movieRequestUrl = NetWorkUtils.buildUrl(location);
-            try{
-                String jsonMovieResponse = NetWorkUtils.getResponseFromHttpUrl(movieRequestUrl);
-                JSONObject[] simpleJsonMovieData = MovieJSONObject.getSimpleMovieStringsFromJson(MainActivity.this,jsonMovieResponse);
-                for (JSONObject aSimpleJsonMovieData : simpleJsonMovieData) {
-                    mMovie.add(GetAttributesFromJSONObject.addToListMovie(aSimpleJsonMovieData));
-                }
-                return mMovie;
-            }catch (Exception e){
-                e.printStackTrace();
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(List<Movie> movieData) {
-            mLoadingIndicator.setVisibility(View.INVISIBLE);
-            if(movieData!=null){
-                showMovieDataView();
-                mMovieAdapter.setMovieImageUris(movieData);
-            } else{
-                showErrorMessage();
-            }
-        }
-    }
-
 
     @Override
     public void MovieOnClick(Movie movieDetail) {
@@ -168,12 +123,28 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
     public boolean onOptionsItemSelected(MenuItem item) {
         int menuID = item.getItemId();
         if(menuID == R.id.most_popular){
-//            mMovieAdapter.setMovieImageUris(null);
-            new FetchMovieTask().execute(MOST_POPULAR_MOVIE_URL);
+            mMovieAdapter.setMovieImageUris(null);
+            fetchMovieData(MOST_POPULAR_MOVIE_URL);
         }else if(menuID == R.id.highest_rated){
-//            mMovieAdapter.setMovieImageUris(null);
-            new FetchMovieTask().execute(HIGHEST_RATED_MOVIE_URL);
+            mMovieAdapter.setMovieImageUris(null);
+            fetchMovieData(HIGHEST_RATED_MOVIE_URL);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onTaskCompleted(List<Movie> movieData) {
+        mLoadingIndicator.setVisibility(View.INVISIBLE);
+        if(movieData!=null){
+            showMovieDataView();
+            mMovieAdapter.setMovieImageUris(movieData);
+        } else{
+            showErrorMessage();
+        }
+    }
+
+    private void fetchMovieData(String urlString){
+        new FetchMovieAsyncTask(MainActivity.this, mMovie, mLoadingIndicator).execute(urlString);
+
     }
 }

@@ -1,13 +1,11 @@
 package com.example.android.popularmovies.utilities;
 
-import android.content.Context;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public final class MovieJSONObject {
-    public static JSONObject[] getSimpleMovieStringsFromJson(Context context, String movieJSONStr)
+    public static JSONObject[] getSimpleMovieStringsFromJson(String movieJSONStr)
             throws JSONException{
         final String OWM_LIST = "results";
         JSONObject forecastJson = new JSONObject(movieJSONStr);

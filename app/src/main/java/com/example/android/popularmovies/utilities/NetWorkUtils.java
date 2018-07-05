@@ -11,7 +11,7 @@ import java.util.Scanner;
 
 public final class NetWorkUtils {
 
-    private static final String TMDB_API = "";
+    private static final String TMDB_API = "f67067337223303c42d344692c3479e8";
 
     public static URL buildUrl(String location) {
         Uri builtUri = Uri.parse(location).buildUpon().appendQueryParameter("api_key", TMDB_API).build();

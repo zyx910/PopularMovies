@@ -44,7 +44,7 @@ public class ReviewActivity extends AppCompatActivity {
             try{
                 String movieReviewUrlLocation = MOVIE_REVIEW+strings[0]+"/reviews";
                 String moViewReviewJSON = NetWorkUtils.getResponseFromHttpUrl(NetWorkUtils.buildUrl(movieReviewUrlLocation));
-                return MovieJSONObject.getSimpleMovieStringsFromJson(ReviewActivity.this,moViewReviewJSON);
+                return MovieJSONObject.getSimpleMovieStringsFromJson(moViewReviewJSON);
 
             }catch (Exception e){
                 e.printStackTrace();
