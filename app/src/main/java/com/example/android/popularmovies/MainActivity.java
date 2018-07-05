@@ -1,6 +1,9 @@
 package com.example.android.popularmovies;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -68,8 +71,14 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
     }
 
     private void loadMovieData(){
-        showMovieDataView();
-        new FetchMovieTask().execute(MOST_POPULAR_MOVIE_URL);
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            showMovieDataView();
+            new FetchMovieTask().execute(MOST_POPULAR_MOVIE_URL);
+        }else {
+            showErrorMessage();
+        }
     }
 
     private void showMovieDataView() {
