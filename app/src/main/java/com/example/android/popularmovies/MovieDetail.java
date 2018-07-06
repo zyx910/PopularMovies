@@ -59,7 +59,7 @@ public class MovieDetail extends AppCompatActivity {
                 String movieOverviewText = movie.getPlotSynopsis();
                 movieOverview.setText(movieOverviewText);
 
-                movieId = intentThatStartedThisActivity.getStringExtra("id");
+                movieId = movie.getId();
             }
 
         }

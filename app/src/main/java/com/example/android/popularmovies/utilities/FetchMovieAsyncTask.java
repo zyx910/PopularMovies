@@ -8,6 +8,7 @@ import com.example.android.popularmovies.data.Movie;
 
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.util.List;
 
@@ -15,7 +16,7 @@ public class FetchMovieAsyncTask extends AsyncTask<String, Void, List<Movie>> {
 
     private OnTaskCompleted taskCompleted;
     private List<Movie> mMovie;
-    private ProgressBar mProgressBar;
+    private WeakReference<ProgressBar> mProgressBar;
 
     public interface OnTaskCompleted {
         void onTaskCompleted(List<Movie> movies);
@@ -24,13 +25,13 @@ public class FetchMovieAsyncTask extends AsyncTask<String, Void, List<Movie>> {
     public FetchMovieAsyncTask(OnTaskCompleted context, List<Movie> movie, ProgressBar progressBar) {
         this.taskCompleted = context;
         mMovie = movie;
-        mProgressBar = progressBar;
+        mProgressBar = new WeakReference<>(progressBar);
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        mProgressBar.setVisibility(View.VISIBLE);
+        mProgressBar.get().setVisibility(View.VISIBLE);
     }
 
     @Override

@@ -6,11 +6,14 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.Toast;
 
 import com.example.android.popularmovies.utilities.MovieJSONObject;
 import com.example.android.popularmovies.utilities.NetWorkUtils;
 
 import org.json.JSONObject;
+
+import java.lang.ref.WeakReference;
 
 public class ReviewActivity extends AppCompatActivity {
     private RecyclerView mReviewRecycleView;
@@ -34,10 +37,14 @@ public class ReviewActivity extends AppCompatActivity {
         mReviewRecycleView.setHasFixedSize(false);
         movieReviewAdapter = new ReviewAdapter();
         mReviewRecycleView.setAdapter(movieReviewAdapter);
-        new FetchMovieReviewAsync().execute(movieId);
+        new FetchMovieReviewAsync(this).execute(movieId);
     }
 
     class FetchMovieReviewAsync extends AsyncTask<String,Void,JSONObject[]> {
+        private final WeakReference<ReviewActivity> reviewActivityWeakReference;
+        public FetchMovieReviewAsync(ReviewActivity activity){
+            reviewActivityWeakReference = new WeakReference<>(activity);
+        }
         @Override
         protected JSONObject[] doInBackground(String... strings) {
             if(strings.length == 0) return null;
@@ -56,7 +63,9 @@ public class ReviewActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(JSONObject[] jsonObjects) {
             if(jsonObjects != null){
-                movieReviewAdapter.setMovieReview(jsonObjects);
+                if(reviewActivityWeakReference.get() != null) {
+                    reviewActivityWeakReference.get().movieReviewAdapter.setMovieReview(jsonObjects);
+                }
             }
         }
     }
